@@ -1,0 +1,28 @@
+{
+  "name": "neo-qr",
+  "version": "1.0.0",
+  "description": "A QR code creator for NEO blockchain",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickfujita/neo-qr.git"
+  },
+  "author": "Nick Fujita",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nickfujita/neo-qr/issues"
+  },
+  "homepage": "https://github.com/nickfujita/neo-qr#readme",
+  "devDependencies": {
+    "ts-loader": "^4.1.0",
+    "tslint": "^5.9.1",
+    "tslint-loader": "^3.6.0",
+    "typescript": "^2.8.1",
+    "webpack": "^4.3.0",
+    "webpack-cli": "^2.0.13"
+  }
+}
