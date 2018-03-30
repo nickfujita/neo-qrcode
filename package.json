@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/nickfujita/neo-qr#readme",
   "devDependencies": {
+    "qrcode": "^1.2.0",
     "ts-loader": "^4.1.0",
     "tslint": "^5.9.1",
     "tslint-loader": "^3.6.0",
