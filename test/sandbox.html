@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <img id='qrcode'/>
+    <div id="container"></div>
+    <script src="../build/bundle.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      var imgEle = document.getElementById('qrcode');
+      var NeoQR = NeoQR.default
+      var options = {
+        address: '12345678912345678912',
+        assetId: NeoQR.Asset.NEO,
+        amount: 20,
+      };
+
+      // var src = NeoQR.generateDataUrl(options);
+      // src.then(uri => {
+      //   imgEle.src = uri;
+      // });
+
+      NeoQR.qrImg(options, imgEle);
+
+      NeoQR.generateString(options)
+      .then(qrString => {
+        var divEle = document.getElementById('container');
+        divEle.innerHTML = qrString;
+      });
+    </script>
+  </body>
+</html>

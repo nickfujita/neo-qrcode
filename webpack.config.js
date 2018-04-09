@@ -2,39 +2,22 @@
 
 const path = require('path');
 const webpack = require('webpack');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 
 module.exports = (env) => {
   const DISTRIBUTION = env && env.DISTRIBUTION === 'true';
 
-  let plugins = [
-    // new HtmlWebpackPlugin({
-    //   inlineSource: '.(js)$',
-    //   template: 'src/index.html'
-    // }),
-    // new HtmlWebpackInlineSourcePlugin(),
-  ];
-
   return {
     resolve: {
-      extensions: ['.ts'],
+      extensions: ['.ts', '.js'],
     },
     entry: ['./src/index'],
     output: {
       path: path.join(__dirname, DISTRIBUTION ? 'docs' : 'build'),
       filename: 'bundle.js',
+      libraryTarget: "umd",
+      library: 'NeoQR'
     },
-    devServer: {
-      contentBase: path.join(__dirname, 'build'),
-      port: 9000,
-      compress: false,
-      https: false,
-      open: true,
-      historyApiFallback: true
-    },
-    devtool: 'inline-source-map',
-    plugins: plugins,
+    devtool: !DISTRIBUTION && 'inline-source-map',
     module: {
       rules: [
         {
