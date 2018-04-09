@@ -1,20 +1,20 @@
 import { NEP9, TransactionAttributes, TransactionAttributeKey, NEP9Key } from './types';
 
-function generateUri(nep9: NEP9): string {
+function generateUri(nep9Data: NEP9): string {
   let parameters = [];
 
-  if (nep9.assetId) {
-    parameters.push(`${NEP9Key.assetId}=${nep9.assetId}`);
+  if (nep9Data.assetId) {
+    parameters.push(`${NEP9Key.assetId}=${nep9Data.assetId}`);
   }
 
-  if (nep9.amount) {
-    parameters.push(`${NEP9Key.amount}=${nep9.amount}`);
+  if (nep9Data.amount) {
+    parameters.push(`${NEP9Key.amount}=${nep9Data.amount}`);
   }
 
-  if (nep9.transactionAttributes) {
-    parameters = Object.keys(nep9.transactionAttributes).reduce((accum, key) => {
+  if (nep9Data.transactionAttributes) {
+    parameters = Object.keys(nep9Data.transactionAttributes).reduce((accum, key) => {
       const transactionAttributeKey = TransactionAttributeKey[key];
-      const value = nep9.transactionAttributes[key];
+      const value = nep9Data.transactionAttributes[key];
 
       transactionAttributeKey && accum.push(`${transactionAttributeKey}=${value}`);
 
@@ -22,7 +22,7 @@ function generateUri(nep9: NEP9): string {
     }, parameters);
   }
 
-  let output = `neo:${nep9.address}`;
+  let output = `neo:${nep9Data.address}`;
 
   if (parameters.length) {
     output += `?${parameters.join('&')}`;
