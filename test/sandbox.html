@@ -5,11 +5,20 @@
     <title></title>
   </head>
   <body>
-    <img id='qrcode'/>
-    <div id="container"></div>
+    <!-- <img id='qrcode'/> -->
+    <div id="container-png"></div>
+    <div id="container-png-neo"></div>
+    <div id="container-jpeg"></div>
+    <div id="container-jpeg-neo"></div>
+    <div id="container-webp"></div>
+    <div id="container-webp-neo"></div>
+    <div id="container-svg"></div>
+    <div id="container-svg-neo"></div>
+    <div id="container-canvas"></div>
+    <div id="container-canvas-neo"></div>
     <script src="../build/bundle.js" charset="utf-8"></script>
     <script type="text/javascript">
-      var imgEle = document.getElementById('qrcode');
+      // var imgEle = document.getElementById('qrcode');
       var NeoQR = NeoQR.default
       var options = {
         address: '12345678912345678912',
@@ -22,13 +31,39 @@
       //   imgEle.src = uri;
       // });
 
-      NeoQR.qrImg(options, imgEle);
+      // NeoQR.attachImg(options, imgEle);
 
-      NeoQR.generateString(options)
-      .then(qrString => {
-        var divEle = document.getElementById('container');
-        divEle.innerHTML = qrString;
-      });
+      // NeoQR.generateSvg(options)
+      // .then(qrString => {
+      //   var divEle = document.getElementById('container');
+      //   divEle.innerHTML = qrString;
+      // });
+
+      var container = document.getElementById('container');
+      // NeoQR.attach(container, options);
+      // NeoQR.attach(container, options, 'png');
+      // NeoQR.attach(container, options, 'canvas');
+
+      var containerPng = document.getElementById('container-png');
+      NeoQR.attach(containerPng, options, 'png');
+      var containerPngNeo = document.getElementById('container-png-neo');
+      NeoQR.attach(containerPngNeo, options, 'png', 'neo');
+      var containerJpeg = document.getElementById('container-jpeg');
+      NeoQR.attach(containerJpeg, options, 'jpeg');
+      var containerJpegNeo = document.getElementById('container-jpeg-neo');
+      NeoQR.attach(containerJpegNeo, options, 'jpeg', 'neo');
+      var containerWebp = document.getElementById('container-webp');
+      NeoQR.attach(containerWebp, options, 'webp');
+      var containerWebpNeo = document.getElementById('container-webp-neo');
+      NeoQR.attach(containerWebpNeo, options, 'webp', 'neo');
+      var containerSvg = document.getElementById('container-svg');
+      NeoQR.attach(containerSvg, options);
+      var containerSvgNeo = document.getElementById('container-svg-neo');
+      NeoQR.attach(containerSvgNeo, options, 'svg', 'neo');
+      var containerCanvas = document.getElementById('container-canvas');
+      NeoQR.attach(containerCanvas, options, 'canvas');
+      var containerCanvasNeo = document.getElementById('container-canvas-neo');
+      NeoQR.attach(containerCanvasNeo, options, 'canvas', 'neo');
     </script>
   </body>
 </html>

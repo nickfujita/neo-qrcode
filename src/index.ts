@@ -12,7 +12,7 @@ const neo_colors = {
   light: '#000000ff', // space
 };
 
-function generateDataUrl(nep9Data: NEP9, type: 'png'|'jpeg'|'webp' = 'png', color?: ColorOptions) {
+function generateDataUrl(nep9Data: NEP9, type: 'png'|'jpeg'|'webp' = 'png', color?: ColorOptions): Promise<string> {
   const uri = nep9.generateUri(nep9Data);
 
   const options = {
@@ -27,18 +27,18 @@ function generateDataUrl(nep9Data: NEP9, type: 'png'|'jpeg'|'webp' = 'png', colo
   });
 }
 
-function qrImg(nep9Data: NEP9, imgEle, theme: undefined|'neo') {
-  generateDataUrl(nep9Data, null, theme === 'neo' && neo_colors)
+function attachImg(nep9Data: NEP9, imgEle, type?, theme?: 'neo') {
+  generateDataUrl(nep9Data, type, theme === 'neo' && neo_colors)
   .then(uri => {
     imgEle.src = uri;
   });
 }
 
-function generateString(nep9Data: NEP9, type: 'svg'|'utf8' = 'svg', color?: ColorOptions) {
+function generateSvg(nep9Data: NEP9, color?: ColorOptions) {
   const uri = nep9.generateUri(nep9Data);
 
   const options = {
-    type,
+    type: 'svg',
     color,
   };
 
@@ -49,10 +49,50 @@ function generateString(nep9Data: NEP9, type: 'svg'|'utf8' = 'svg', color?: Colo
   });
 }
 
+function generateCanvas(nep9Data: NEP9, color?: ColorOptions) {
+  const uri = nep9.generateUri(nep9Data);
+
+  const options = {
+    color,
+  };
+
+  return new Promise((resolve, reject) => {
+    QRCode.toCanvas(uri, options, (err, canvas) => {
+      return err ? reject(err) : resolve(canvas);
+    });
+  });
+}
+
+function attach(divEle, nep9Data: NEP9, type: 'png'|'jpeg'|'webp'|'svg'|'canvas'|any = 'svg', theme?: 'neo') {
+
+  if (/png|jpeg|webp/.test(type)) {
+    const imgEle = document.createElement('img');
+    generateDataUrl(nep9Data, type, theme === 'neo' && neo_colors)
+    .then(uri => {
+      imgEle.src = uri;
+      divEle.innerHTML = '';
+      divEle.append(imgEle);
+    });
+  } else if (/svg/.test(type)) {
+    generateSvg(nep9Data, theme === 'neo' && neo_colors)
+    .then(svg => {
+      divEle.innerHTML = svg;
+    });
+  } else if (/canvas/.test(type)) {
+    generateCanvas(nep9Data, theme === 'neo' && neo_colors)
+    .then(canvas => {
+      divEle.innerHTML = '';
+      divEle.append(canvas);
+    });
+  }
+
+}
+
 export default {
   ...nep9,
   generateDataUrl,
-  generateString,
-  qrImg,
+  generateSvg,
+  attachImg,
+  attach,
   Asset,
 };
