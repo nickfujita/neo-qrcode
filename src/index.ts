@@ -18,6 +18,7 @@ function generateDataUrl(nep9Data: NEP9, type: 'png'|'jpeg'|'webp' = 'png', colo
   const options = {
     type: `image/${type}`,
     color,
+    errorCorrectionLevel: 'H',
   };
 
   return new Promise((resolve, reject) => {
@@ -40,6 +41,7 @@ function generateSvg(nep9Data: NEP9, color?: ColorOptions) {
   const options = {
     type: 'svg',
     color,
+    errorCorrectionLevel: 'H',
   };
 
   return new Promise((resolve, reject) => {
@@ -54,6 +56,7 @@ function generateCanvas(nep9Data: NEP9, color?: ColorOptions) {
 
   const options = {
     color,
+    errorCorrectionLevel: 'H',
   };
 
   return new Promise((resolve, reject) => {
@@ -88,11 +91,23 @@ function attach(divEle, nep9Data: NEP9, type: 'png'|'jpeg'|'webp'|'svg'|'canvas'
 
 }
 
+function stream(stream, nep9Data: NEP9, color?: ColorOptions) {
+  const uri = nep9.generateUri(nep9Data);
+
+  const options = {
+    color,
+    errorCorrectionLevel: 'H',
+  };
+
+  QRCode.toFileStream(stream, uri, options);
+}
+
 export default {
   ...nep9,
   generateDataUrl,
   generateSvg,
   attachImg,
   attach,
+  stream,
   Asset,
 };

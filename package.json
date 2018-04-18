@@ -4,6 +4,7 @@
   "description": "A QR code creator for NEO blockchain",
   "main": "index.js",
   "scripts": {
+    "start": "webpack --mode development --watch",
     "dev": "webpack --mode development",
     "build": "webpack --mode production"
   },
@@ -18,7 +19,10 @@
   },
   "homepage": "https://github.com/nickfujita/neo-qr#readme",
   "devDependencies": {
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0",
     "qrcode": "^1.2.0",
+    "request": "^2.85.0",
     "ts-loader": "^4.2.0",
     "tslint": "^5.9.1",
     "tslint-loader": "^3.6.0",
