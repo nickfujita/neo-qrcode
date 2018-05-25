@@ -1,6 +1,6 @@
 interface NEP9 {
   address: string;
-  assetId?: string;
+  asset?: string;
   amount?: number;
 
   // TransactionAttributes
@@ -45,7 +45,7 @@ interface NEP9 {
 }
 
 enum NEP9Key {
-  assetId = 'assetId',
+  asset = 'asset',
   amount = 'amount',
 
   transactionAttributes = 'transactionAttributes',
@@ -89,13 +89,7 @@ enum NEP9Key {
   remark15 = 'remark15',
 }
 
-enum Asset {
-  NEO = 'c56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b',
-  GAS = '602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7',
-}
-
 export {
   NEP9,
   NEP9Key,
-  Asset,
 };

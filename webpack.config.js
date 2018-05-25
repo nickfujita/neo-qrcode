@@ -12,8 +12,8 @@ module.exports = (env) => {
     },
     entry: ['./src/index'],
     output: {
-      path: path.join(__dirname, DISTRIBUTION ? 'docs' : 'build'),
-      filename: 'bundle.js',
+      path: path.join(__dirname, 'build'),
+      filename: DISTRIBUTION ? 'neoqr.min.js' : 'bundle.js',
       libraryTarget: "umd",
       library: 'NeoQR',
       globalObject: 'typeof self !== \'undefined\' ? self : this',

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack --mode development --watch",
     "dev": "webpack --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production --env.DISTRIBUTION=true"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,10 @@
     "typescript": "^2.8.1",
     "webpack": "^4.5.0",
     "webpack-cli": "^2.0.14"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "canvas": "^1.6.11",
+    "pngjs": "^3.3.3"
   }
 }
