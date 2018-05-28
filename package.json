@@ -2,7 +2,7 @@
   "name": "neo-qr",
   "version": "1.0.0",
   "description": "A QR code creator for NEO blockchain",
-  "main": "index.js",
+  "main": "build/neoqr.min.js",
   "scripts": {
     "start": "webpack --mode development --watch",
     "dev": "webpack --mode development",
@@ -10,29 +10,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nickfujita/neo-qr.git"
+    "url": "git+https://github.com/nickfujita/neo-qr-ts.git"
   },
   "author": "Nick Fujita",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nickfujita/neo-qr/issues"
+    "url": "https://github.com/nickfujita/neo-qr-ts/issues"
   },
-  "homepage": "https://github.com/nickfujita/neo-qr#readme",
+  "homepage": "https://github.com/nickfujita/neo-qr-ts#readme",
   "devDependencies": {
-    "express": "^4.16.3",
-    "express-handlebars": "^3.0.0",
-    "qrcode": "^1.2.0",
-    "request": "^2.85.0",
-    "ts-loader": "^4.2.0",
-    "tslint": "^5.9.1",
-    "tslint-loader": "^3.6.0",
-    "typescript": "^2.8.1",
-    "webpack": "^4.5.0",
-    "webpack-cli": "^2.0.14"
+    "qrcode": "1.2.0",
+    "ts-loader": "4.2.0",
+    "tslint": "5.9.1",
+    "tslint-loader": "3.6.0",
+    "typescript": "2.8.1",
+    "webpack": "4.5.0",
+    "webpack-cli": "2.0.14"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "canvas": "^1.6.11",
-    "pngjs": "^3.3.3"
+    "axios": "0.18.0"
   }
 }

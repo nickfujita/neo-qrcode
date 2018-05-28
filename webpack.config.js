@@ -16,6 +16,7 @@ module.exports = (env) => {
       filename: DISTRIBUTION ? 'neoqr.min.js' : 'bundle.js',
       libraryTarget: "umd",
       library: 'NeoQR',
+      libraryExport: 'default',
       globalObject: 'typeof self !== \'undefined\' ? self : this',
     },
     devtool: !DISTRIBUTION && 'inline-source-map',

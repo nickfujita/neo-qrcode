@@ -10,12 +10,12 @@
     <script src="../build/bundle.js" charset="utf-8"></script>
     <script type="text/javascript">
 
-      var NeoQR = NeoQR.default
+      // var NeoQR = NeoQR.default
 
       function generateQRCode() {
         var options = {
           address: '12345678912345678912',
-          assetId: 'neo',
+          asset: '0e86a40588f715fcaf7acd1812d50af478e6e917',
           amount: Math.floor(Math.random() * Math.floor(100)),
           description: 'What time is it right now?',
         };
@@ -27,8 +27,7 @@
           container.src = imgData
         });
       }
-      // setInterval(generateQRCode, 100)
-      generateQRCode()
+      generateQRCode();
     </script>
   </body>
 </html>

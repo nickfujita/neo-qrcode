@@ -1,40 +1,41 @@
+import axios from 'axios';
 import nep9 from './nep9';
 import { NEP9 } from './nep9/types';
 import QRCode from 'qrcode';
-import axios from 'axios';
+import nep5Tokens from './nep5';
 
-class NeoQR {
+export default class NeoQR {
 
   private creationPromise;
 
-  constructor(nep9Data: NEP9|string, width = 200, canvasOverride?, axiosOverride?) {
+  constructor(nep9Data: NEP9, width = 200) {
     let canvas;
-    const uri = typeof nep9Data === 'string' ? nep9Data : nep9.generateUri(nep9Data as NEP9);
+    const uri = nep9.generateUri(nep9Data);
 
     const options = {
       errorCorrectionLevel: 'H',
       width,
     };
 
+    // Create the qr code canvas
     this.creationPromise = new Promise((resolve, reject) => {
-      if (canvasOverride) {
-        QRCode.toCanvas(canvasOverride, uri, options, (err, canvas) => {
-          return err ? reject(err) : resolve(canvas);
-        });
-      } else {
-        QRCode.toCanvas(uri, options, (err, canvas) => {
-          return err ? reject(err) : resolve(canvas);
-        });
-      }
+      QRCode.toCanvas(uri, options, (err, canvas) => {
+        return err ? reject(err) : resolve(canvas);
+      });
     })
-
+    // save the canvas and fetch nep5 data if not already fetched
     .then(c => {
       canvas = c;
-      const realAxios = axiosOverride || axios;
-      return realAxios.get('./assets/neo.svg')
-      .then(response => {
-        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(response.data)}`;
-      });
+      const asset = nep9Data.asset.toUpperCase();
+      let assetSymbol;
+      if (asset === 'NEO' || asset === 'GAS') {
+        assetSymbol = asset;
+      } else {
+        assetSymbol = nep5Tokens[nep9Data.asset];
+      }
+
+      return axios.get(`https://cdn.o3.network/img/nep5svgs/${assetSymbol || 'NEO'}.svg`)
+      .then(response => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(response.data)}`);
     })
     .then(logoSrc => {
       return new Promise((resolve, reject) => {
@@ -84,5 +85,3 @@ class NeoQR {
     return this.creationPromise;
   }
 }
-
-export default NeoQR;
