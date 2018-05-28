@@ -5,65 +5,29 @@
     <title></title>
   </head>
   <body>
-    <!-- <img id='qrcode'/> -->
-    <div id="container-png"></div>
-    <div id="container-png-neo"></div>
-    <div id="container-jpeg"></div>
-    <div id="container-jpeg-neo"></div>
-    <div id="container-webp"></div>
-    <div id="container-webp-neo"></div>
-    <div id="container-svg"></div>
-    <div id="container-svg-neo"></div>
-    <div id="container-canvas"></div>
-    <div id="container-canvas-neo"></div>
+    <img id="container"></img>
+
     <script src="../build/bundle.js" charset="utf-8"></script>
     <script type="text/javascript">
-      // var imgEle = document.getElementById('qrcode');
-      var NeoQR = NeoQR.default
-      var options = {
-        address: '12345678912345678912',
-        assetId: NeoQR.Asset.NEO,
-        amount: 20,
-      };
 
-      // var src = NeoQR.generateDataUrl(options);
-      // src.then(uri => {
-      //   imgEle.src = uri;
-      // });
+      // var NeoQR = NeoQR.default
 
-      // NeoQR.attachImg(options, imgEle);
+      function generateQRCode() {
+        var options = {
+          address: '12345678912345678912',
+          asset: '0e86a40588f715fcaf7acd1812d50af478e6e917',
+          amount: Math.floor(Math.random() * Math.floor(100)),
+          description: 'What time is it right now?',
+        };
 
-      // NeoQR.generateSvg(options)
-      // .then(qrString => {
-      //   var divEle = document.getElementById('container');
-      //   divEle.innerHTML = qrString;
-      // });
-
-      var container = document.getElementById('container');
-      // NeoQR.attach(container, options);
-      // NeoQR.attach(container, options, 'png');
-      // NeoQR.attach(container, options, 'canvas');
-
-      var containerPng = document.getElementById('container-png');
-      NeoQR.attach(containerPng, options, 'png');
-      var containerPngNeo = document.getElementById('container-png-neo');
-      NeoQR.attach(containerPngNeo, options, 'png', 'neo');
-      var containerJpeg = document.getElementById('container-jpeg');
-      NeoQR.attach(containerJpeg, options, 'jpeg');
-      var containerJpegNeo = document.getElementById('container-jpeg-neo');
-      NeoQR.attach(containerJpegNeo, options, 'jpeg', 'neo');
-      var containerWebp = document.getElementById('container-webp');
-      NeoQR.attach(containerWebp, options, 'webp');
-      var containerWebpNeo = document.getElementById('container-webp-neo');
-      NeoQR.attach(containerWebpNeo, options, 'webp', 'neo');
-      var containerSvg = document.getElementById('container-svg');
-      NeoQR.attach(containerSvg, options);
-      var containerSvgNeo = document.getElementById('container-svg-neo');
-      NeoQR.attach(containerSvgNeo, options, 'svg', 'neo');
-      var containerCanvas = document.getElementById('container-canvas');
-      NeoQR.attach(containerCanvas, options, 'canvas');
-      var containerCanvasNeo = document.getElementById('container-canvas-neo');
-      NeoQR.attach(containerCanvasNeo, options, 'canvas', 'neo');
+        var container = document.getElementById('container');
+        var qrCode = new NeoQR(options, 200);
+        qrCode.toDataURL()
+        .then(imgData => {
+          container.src = imgData
+        });
+      }
+      generateQRCode();
     </script>
   </body>
 </html>

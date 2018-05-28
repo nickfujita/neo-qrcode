@@ -1,98 +1,87 @@
+import axios from 'axios';
 import nep9 from './nep9';
-import { NEP9, Asset } from './nep9/types';
+import { NEP9 } from './nep9/types';
 import QRCode from 'qrcode';
+import nep5Tokens from './nep5';
 
-interface ColorOptions {
-  dark: string;
-  light: string;
-}
+export default class NeoQR {
 
-const neo_colors = {
-  dark: '#8ff73bff', // dots
-  light: '#000000ff', // space
-};
+  private creationPromise;
 
-function generateDataUrl(nep9Data: NEP9, type: 'png'|'jpeg'|'webp' = 'png', color?: ColorOptions): Promise<string> {
-  const uri = nep9.generateUri(nep9Data);
+  constructor(nep9Data: NEP9, width = 200) {
+    let canvas;
+    const uri = nep9.generateUri(nep9Data);
 
-  const options = {
-    type: `image/${type}`,
-    color,
-  };
+    const options = {
+      errorCorrectionLevel: 'H',
+      width,
+    };
 
-  return new Promise((resolve, reject) => {
-    QRCode.toDataURL(uri, options, (err, url) => {
-      return err ? reject(err) : resolve(url);
-    });
-  });
-}
+    // Create the qr code canvas
+    this.creationPromise = new Promise((resolve, reject) => {
+      QRCode.toCanvas(uri, options, (err, canvas) => {
+        return err ? reject(err) : resolve(canvas);
+      });
+    })
+    // save the canvas and fetch nep5 data if not already fetched
+    .then(c => {
+      canvas = c;
+      const asset = nep9Data.asset.toUpperCase();
+      let assetSymbol;
+      if (asset === 'NEO' || asset === 'GAS') {
+        assetSymbol = asset;
+      } else {
+        assetSymbol = nep5Tokens[nep9Data.asset];
+      }
 
-function attachImg(nep9Data: NEP9, imgEle, type?, theme?: 'neo') {
-  generateDataUrl(nep9Data, type, theme === 'neo' && neo_colors)
-  .then(uri => {
-    imgEle.src = uri;
-  });
-}
-
-function generateSvg(nep9Data: NEP9, color?: ColorOptions) {
-  const uri = nep9.generateUri(nep9Data);
-
-  const options = {
-    type: 'svg',
-    color,
-  };
-
-  return new Promise((resolve, reject) => {
-    QRCode.toString(uri, options, (err, url) => {
-      return err ? reject(err) : resolve(url);
-    });
-  });
-}
-
-function generateCanvas(nep9Data: NEP9, color?: ColorOptions) {
-  const uri = nep9.generateUri(nep9Data);
-
-  const options = {
-    color,
-  };
-
-  return new Promise((resolve, reject) => {
-    QRCode.toCanvas(uri, options, (err, canvas) => {
-      return err ? reject(err) : resolve(canvas);
-    });
-  });
-}
-
-function attach(divEle, nep9Data: NEP9, type: 'png'|'jpeg'|'webp'|'svg'|'canvas'|any = 'svg', theme?: 'neo') {
-
-  if (/png|jpeg|webp/.test(type)) {
-    const imgEle = document.createElement('img');
-    generateDataUrl(nep9Data, type, theme === 'neo' && neo_colors)
-    .then(uri => {
-      imgEle.src = uri;
-      divEle.innerHTML = '';
-      divEle.append(imgEle);
-    });
-  } else if (/svg/.test(type)) {
-    generateSvg(nep9Data, theme === 'neo' && neo_colors)
-    .then(svg => {
-      divEle.innerHTML = svg;
-    });
-  } else if (/canvas/.test(type)) {
-    generateCanvas(nep9Data, theme === 'neo' && neo_colors)
-    .then(canvas => {
-      divEle.innerHTML = '';
-      divEle.append(canvas);
+      return axios.get(`https://cdn.o3.network/img/nep5svgs/${assetSymbol || 'NEO'}.svg`)
+      .then(response => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(response.data)}`);
+    })
+    .then(logoSrc => {
+      return new Promise((resolve, reject) => {
+        const context = canvas.getContext('2d');
+        context.roundRect = function (x, y, w, h, r) {
+          if (w < 2 * r) {
+            r = w / 2;
+          }
+          if (h < 2 * r) {
+            r = h / 2;
+          }
+          this.beginPath();
+          this.moveTo(x + r, y);
+          this.arcTo(x + w, y, x + w, y + h, r);
+          this.arcTo(x + w, y + h, x, y + h, r);
+          this.arcTo(x, y + h, x, y, r);
+          this.arcTo(x, y, x + w, y, r);
+          this.closePath();
+          return this;
+        };
+        const img = new Image();
+        img.onload = function() {
+          const scale = width / 200;
+          context.roundRect(70 * scale, 70 * scale, 60 * scale, 60 * scale, 5 * scale);
+          context.fillStyle = 'white';
+          context.fill();
+          context.drawImage(img, 80 * scale, 80 * scale, 40 * scale, 40 * scale);
+          const dt = canvas.toDataURL('image/png');
+          resolve(dt);
+        };
+        img.src = logoSrc;
+      });
     });
   }
 
-}
+  attach(divEle): Promise<any> {
+    divEle.innerHTML = '';
+    const img = new Image();
+    return this.creationPromise
+    .then(src => {
+      img.src = src;
+      divEle.append(img);
+    });
+  }
 
-export default {
-  ...nep9,
-  generateDataUrl,
-  generateSvg,
-  attachImg,
-  attach,
-  Asset,
-};
+  toDataURL(): Promise<any> {
+    return this.creationPromise;
+  }
+}

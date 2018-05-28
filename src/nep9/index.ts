@@ -1,26 +1,12 @@
-import { NEP9, TransactionAttributes, TransactionAttributeKey, NEP9Key } from './types';
+import { NEP9, NEP9Key } from './types';
 
 function generateUri(nep9Data: NEP9): string {
-  let parameters = [];
 
-  if (nep9Data.assetId) {
-    parameters.push(`${NEP9Key.assetId}=${nep9Data.assetId}`);
-  }
-
-  if (nep9Data.amount) {
-    parameters.push(`${NEP9Key.amount}=${nep9Data.amount}`);
-  }
-
-  if (nep9Data.transactionAttributes) {
-    parameters = Object.keys(nep9Data.transactionAttributes).reduce((accum, key) => {
-      const transactionAttributeKey = TransactionAttributeKey[key];
-      const value = nep9Data.transactionAttributes[key];
-
-      transactionAttributeKey && accum.push(`${transactionAttributeKey}=${value}`);
-
-      return accum;
-    }, parameters);
-  }
+  const parameters = Object.keys(nep9Data).reduce((accum, key) => {
+    const value = encodeURIComponent(nep9Data[key]);
+    NEP9Key[key] && accum.push(`${key}=${value}`);
+    return accum;
+  }, []);
 
   let output = `neo:${nep9Data.address}`;
 
@@ -49,7 +35,6 @@ function parseUri(uri: string): NEP9 {
 
   const attributes = uriParts[1];
   const attributesList = attributes.split('&');
-  const transactionAttributes: TransactionAttributes = {};
 
   attributesList.forEach(attribute => {
     const attributeParts = attribute.split('=');
@@ -61,16 +46,10 @@ function parseUri(uri: string): NEP9 {
     const key = attributeParts[0];
     const value = attributeParts[1];
 
-    if (key === 'assetId' || key === 'amount') {
+    if (NEP9Key[key]) {
       nep9[key] = value;
-    } else if (TransactionAttributeKey[key]) {
-      transactionAttributes[key] = value;
     }
   });
-
-  if (Object.keys(transactionAttributes).length) {
-    nep9.transactionAttributes = transactionAttributes;
-  }
 
   return nep9;
 }
