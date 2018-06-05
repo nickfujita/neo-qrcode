@@ -3,8 +3,10 @@ import { NEP9, NEP9Key } from './types';
 function generateUri(nep9Data: NEP9): string {
 
   const parameters = Object.keys(nep9Data).reduce((accum, key) => {
-    const value = encodeURIComponent(nep9Data[key]);
-    NEP9Key[key] && accum.push(`${key}=${value}`);
+    if (nep9Data[key] !== null && nep9Data[key] !== undefined  && nep9Data[key] !== '') {
+      const value = encodeURIComponent(nep9Data[key]);
+      NEP9Key[key] && accum.push(`${key}=${value}`);
+    }
     return accum;
   }, []);
 
