@@ -26,15 +26,16 @@ export default class NeoQR {
     // save the canvas and fetch nep5 data if not already fetched
     .then(c => {
       canvas = c;
-      const asset = nep9Data.asset.toUpperCase();
-      let assetSymbol;
+      const asset = nep9Data.asset && nep9Data.asset.toUpperCase();
+      let assetSymbol = 'NEO';
       if (asset === 'NEO' || asset === 'GAS') {
         assetSymbol = asset;
-      } else {
+      } else if (asset) {
         assetSymbol = nep5Tokens[nep9Data.asset];
       }
 
-      return axios.get(`https://cdn.o3.network/img/nep5svgs/${assetSymbol || 'NEO'}.svg`)
+      return axios.get(`https://cdn.o3.network/img/nep5svgs/${assetSymbol}.svg`)
+      .catch(e => axios.get(`https://cdn.o3.network/img/nep5svgs/NEO.svg`))
       .then(response => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(response.data)}`);
     })
     .then(logoSrc => {
