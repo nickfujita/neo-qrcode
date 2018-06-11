@@ -6,11 +6,12 @@ import nep5Tokens from './nep5';
 
 export default class NeoQR {
 
+  private _uri: string;
   private creationPromise;
 
   constructor({nep9Data, width = 200, canvasEl, imgEl}: NeoQRData) {
     let canvas;
-    const uri = nep9.generateUri(nep9Data);
+    this._uri = nep9.generateUri(nep9Data);
 
     const options = {
       errorCorrectionLevel: 'H',
@@ -19,7 +20,7 @@ export default class NeoQR {
 
     // Create the qr code canvas
     this.creationPromise = new Promise((resolve, reject) => {
-      QRCode.toCanvas(uri, options, (err, canvas) => {
+      QRCode.toCanvas(this._uri, options, (err, canvas) => {
         return err ? reject(err) : resolve(canvas);
       });
     })
@@ -78,6 +79,10 @@ export default class NeoQR {
         img.src = logoSrc;
       });
     });
+  }
+
+  get uri(): string {
+    return this._uri;
   }
 
   toDataURL(): Promise<any> {
