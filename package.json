@@ -29,5 +29,10 @@
   },
   "dependencies": {
     "axios": "0.18.0"
-  }
+  },
+  "keywords": [
+    "neo",
+    "qrcode",
+    "nep9"
+  ]
 }
