@@ -8,7 +8,7 @@ export default class NeoQR {
 
   private creationPromise;
 
-  constructor(nep9Data: NEP9, width = 200) {
+  constructor({nep9Data, width = 200, canvasEl, imgEl}: NeoQRData) {
     let canvas;
     const uri = nep9.generateUri(nep9Data);
 
@@ -65,6 +65,14 @@ export default class NeoQR {
           context.fill();
           context.drawImage(img, 80 * scale, 80 * scale, 40 * scale, 40 * scale);
           const dt = canvas.toDataURL('image/png');
+          if (canvasEl) {
+            canvasEl.width = canvas.width;
+            canvasEl.height = canvas.height;
+            const destCtx = canvasEl.getContext('2d');
+            destCtx.drawImage(canvas, 0, 0);
+          } else if (imgEl) {
+            imgEl.src = dt;
+          }
           resolve(dt);
         };
         img.src = logoSrc;
@@ -72,17 +80,14 @@ export default class NeoQR {
     });
   }
 
-  attach(divEle): Promise<any> {
-    divEle.innerHTML = '';
-    const img = new Image();
-    return this.creationPromise
-    .then(src => {
-      img.src = src;
-      divEle.append(img);
-    });
-  }
-
   toDataURL(): Promise<any> {
     return this.creationPromise;
   }
+}
+
+interface NeoQRData {
+  nep9Data: NEP9;
+  width?: number;
+  canvasEl?: HTMLCanvasElement;
+  imgEl?: HTMLImageElement;
 }

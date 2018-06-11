@@ -35,36 +35,43 @@ import NeoQR from 'neo-qrcode';
 HTML
 ```
   <body>
-    <img id="qrcode"></img>
+    <canvas id="canvas-container"></canvas>
 
-    <div id="container"></div>
+    <img id="img-container"></img>
+
+    <img id="img-src-container"></img>
   </body>
 ```
 
-JS / TS
+JS
 ```
-const options = {
+var options = {
   address: 'AR8rRBxgWw5siKsp1dUmfTLy6QQTjcqoqB',
   asset: 'NEO', // or 'GAS' or 'ceab719b8baa2310f232ee0d277c061704541cfb'
-  amount: 1
+  amount: 1,
+  description: 'Sunday morning breakfast'
 };
 
-const width = 250; // px
-
-const qrCode = new NeoQR(options, width);
 
 
+// attach to canvas element
 
-// set image src from data url
+var canvasContainer = document.getElementById('canvas-container');
+var canvasQrCode = new NeoQR({nep9Data: options, canvasEl: canvasContainer});
 
-const imgEl = document.getElementById('qrcode');
+
+
+// attach to a img element
+
+var imgContainer = document.getElementById('img-container');
+var imgQrCode = new NeoQR({nep9Data: options, imgEl: imgContainer});
+
+
+
+// set img src from data url
+
+var imgSrcContainer = document.getElementById('img-src-container');
+var qrCode = new NeoQR({nep9Data: options});
 qrCode.toDataURL()
-.then(imgData => imgEl.src = imgData);
-
-
-
-// Attaching to a div element
-
-const containerEl = document.getElementById('container');
-qrCode.attach(containerEl);
+.then(imgData => imgSrcContainer.src = imgData);
 ```
