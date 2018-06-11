@@ -5,7 +5,11 @@
     <title></title>
   </head>
   <body>
-    <img id="container"></img>
+    <canvas id="canvas-container"></canvas>
+
+    <img id="img-container"></img>
+
+    <img id="img-src-container"></img>
 
     <script src="../build/bundle.js" charset="utf-8"></script>
     <script type="text/javascript">
@@ -18,12 +22,17 @@
           description: 'What time is it right now?',
         };
 
-        var container = document.getElementById('container');
-        var qrCode = new NeoQR(options, 200);
+        var canvasContainer = document.getElementById('canvas-container');
+        var canvasQrCode = new NeoQR({nep9Data: options, canvasEl: canvasContainer});
+
+        var imgContainer = document.getElementById('img-container');
+        var imgQrCode = new NeoQR({nep9Data: options, imgEl: imgContainer});
+
+        var imgSrcContainer = document.getElementById('img-src-container');
+        var qrCode = new NeoQR({nep9Data: options});
+
         qrCode.toDataURL()
-        .then(imgData => {
-          container.src = imgData
-        });
+        .then(imgData => imgSrcContainer.src = imgData);
       }
       generateQRCode();
     </script>
