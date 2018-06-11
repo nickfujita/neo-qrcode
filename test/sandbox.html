@@ -33,6 +33,8 @@
 
         qrCode.toDataURL()
         .then(imgData => imgSrcContainer.src = imgData);
+
+        console.log(qrCode.uri);
       }
       generateQRCode();
     </script>
