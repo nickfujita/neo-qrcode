@@ -1,6 +1,6 @@
 {
   "name": "neo-qrcode",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A QR code creator for NEO blockchain",
   "main": "build/neoqr.min.js",
   "scripts": {
