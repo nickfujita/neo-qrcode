@@ -9,6 +9,10 @@ export default class NeoQR {
   private _uri: string;
   private creationPromise;
 
+  static parseUri(uri: string): NEP9 {
+    return nep9.parseUri(uri);
+  }
+
   constructor({nep9Data, width = 200, canvasEl, imgEl}: NeoQRData) {
     let canvas;
     this._uri = nep9.generateUri(nep9Data);
