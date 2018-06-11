@@ -14,7 +14,7 @@ Can be configured to include:
 
 In a browser - cdn [![](https://data.jsdelivr.com/v1/package/npm/neo-qrcode/badge)](https://www.jsdelivr.com/package/npm/neo-qrcode)
 ```
-<script src="https://cdn.jsdelivr.net/npm/neo-qrcode@0.0.2/build/neoqr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/neo-qrcode@0.0.3/build/neoqr.min.js"></script>
 ```
 ```
 window.NeoQR
