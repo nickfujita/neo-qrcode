@@ -51,7 +51,7 @@ const options = {
 
 const width = 250; // px
 
-const qrCode = new NeoQR(options, 250);
+const qrCode = new NeoQR(options, width);
 
 
 
@@ -65,6 +65,6 @@ qrCode.toDataURL()
 
 // Attaching to a div element
 
-const imgEl = document.getElementById('qrcode');
-qrCode.attach(imgEl);
+const containerEl = document.getElementById('container');
+qrCode.attach(containerEl);
 ```
