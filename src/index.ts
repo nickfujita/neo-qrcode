@@ -2,7 +2,9 @@ import axios from 'axios';
 import nep9 from './nep9';
 import { NEP9 } from './nep9/types';
 import QRCode from 'qrcode';
-import nep5Tokens from './nep5';
+import getNep5Data from './nep5';
+
+const nep5DataUrl = 'https://platform.o3.network/api/v1/neo/nep5';
 
 export default class NeoQR {
 
@@ -23,24 +25,28 @@ export default class NeoQR {
     };
 
     // Create the qr code canvas
-    this.creationPromise = new Promise((resolve, reject) => {
-      QRCode.toCanvas(this._uri, options, (err, canvas) => {
-        return err ? reject(err) : resolve(canvas);
-      });
-    })
+    this.creationPromise = Promise.all([
+      getNep5Data(),
+      new Promise((resolve, reject) => {
+        QRCode.toCanvas(this._uri, options, (err, canvas) => {
+          return err ? reject(err) : resolve(canvas);
+        });
+      }),
+    ])
     // save the canvas and fetch nep5 data if not already fetched
-    .then(c => {
+    .then(([nep5Data, c]) => {
       canvas = c;
       const asset = nep9Data.asset && nep9Data.asset.toUpperCase();
-      let assetSymbol = 'NEO';
+      let logo = 'https://cdn.o3.network/img/nep5svgs/NEO.svg';
       if (asset === 'NEO' || asset === 'GAS') {
-        assetSymbol = asset;
+        logo = `https://cdn.o3.network/img/nep5svgs/${asset}.svg`;
       } else if (asset) {
-        assetSymbol = nep5Tokens[nep9Data.asset];
+        const tokenData = nep5Data[nep9Data.asset];
+        logo = tokenData && tokenData.logoSVG;
       }
 
-      return axios.get(`https://cdn.o3.network/img/nep5svgs/${assetSymbol}.svg`)
-      .catch(e => axios.get(`https://cdn.o3.network/img/nep5svgs/NEO.svg`))
+      return axios.get(logo)
+      .catch(e => axios.get('https://cdn.o3.network/img/nep5svgs/default.svg'))
       .then(response => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(response.data)}`);
     })
     .then(logoSrc => {
@@ -63,7 +69,7 @@ export default class NeoQR {
           return this;
         };
         const img = new Image();
-        img.onload = function() {
+        img.onload = () => {
           const scale = width / 200;
           context.roundRect(70 * scale, 70 * scale, 60 * scale, 60 * scale, 5 * scale);
           context.fillStyle = 'white';
